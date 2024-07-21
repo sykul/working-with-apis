@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img src="#" />
+    <button type="button" class="" style="height: 20px; width: 20px"></button>
+    <input
+      type="text"
+      name="search-box"
+      id="search-box"
+      minlength="3"
+      maxlength="20"
+    />
+    <script>
+      const searchBox = document.querySelector("#search-box");
+      const img = document.querySelector("img");
+      const btn = document.querySelector("button");
+      function getSearchTerm(searchBoxParameter) {
+        const searchTerm = searchBoxParameter.value;
+        return searchTerm;
+      }
+
+      function fetchApiData(term) {
+        fetch(
+          `https://api.giphy.com/v1/gifs/translate?api_key=zp0ecQhtLxdwIVhhEbzSXRs2PP1tP251&s=${term}`,
+          { mode: "cors" }
+        ).then(function (response) {
+          return response.json();
+        })
+        .catch('Error')
+        .finally('?');
+      }
+
+      function initiatePromise() {
+        const searchTerm = getSearchTerm(searchBox);
+        const response = fetchApiData(searchTerm);
+        const apiCallPromise = new Promise(function (resolve, reject) {
+          if (response) {
+            resolve;
+          }
+        });
+      }
+
+      function loadImage(searchTerm) {
+        fetch(
+          `https://api.giphy.com/v1/gifs/translate?api_key=zp0ecQhtLxdwIVhhEbzSXRs2PP1tP251&s=${searchTerm}`,
+          { mode: "cors" }
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (response) {
+            img.src = response.data.images.original.url;
+          });
+      }
+      loadImage("cats");
+      btn.addEventListener("click", () => fetchApiData(getSearchTerm(searchBox)));
+    </script>
+  </body>
+</html>
